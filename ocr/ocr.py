@@ -23,12 +23,8 @@ class OCR(object):
         #self.api.SetPageSegMode(tesseract.PSM_AUTO)
 
 
-
-
-
-
-    def readtext(self, img):
-        text = self.ocrModel.readtext(img)
+    def readtext(self, image):
+        text = self.ocrModel.readtext(image)
         # loop over recognized text per image
         for (bbox, text, prob) in text:
             #print("[INFO] {:.4f}: {}".format(prob, text))
@@ -40,11 +36,11 @@ class OCR(object):
             bl = (int(bl[0]), int(bl[1]))
             # clean up the text and draw the box surrounding the text along
             # with the OCR'd text itself
-            text = self.__cleanupText(text)
-            cv2.rectangle(img, tl, br, (0, 255, 0), 2)
-            cv2.putText(img, text, (tl[0], tl[1] - 10),
+            text = OCR.__cleanupText(text)
+            cv2.rectangle(image, tl, br, (0, 255, 0), 2)
+            cv2.putText(image, text, (tl[0], tl[1] - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
-        return img
+        return image
 
 
 

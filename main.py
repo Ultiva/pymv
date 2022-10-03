@@ -153,8 +153,8 @@ def captureVideo():
 
 
 def run(
-        height=640,
-        width=480,
+        height=800,
+        width=800,
         ocr="easyocr",
         gpu=False,
         magnification=4,
@@ -177,42 +177,39 @@ def run(
 
     while True:
         _, frame = cap.read()
-        #frame = ImageProcessing.preprocessForRoI(frame)
+        cv2.imshow("frame", frame)
 
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        cv2.imshow("preproc", frame)
+        # find corner of biggest closed rectangle and draw those points
+        roiPts = ImageProcessing.biggestClosedContour(frame)
+        rearrangedRoiPts = ImageProcessing.rearrangePts(roiPts)
+        cv2.drawContours(frame, rearrangedRoiPts, -1, (255, 0, 0), 20)
 
-        #cropped_image = frame[300:780, 500:1420]
-        #frameup = cv2.resize(cropped_image, dsize=None, fx=magnification, fy=magnification)
+        # warp image with predefined lengths
+        warpedImg = ImageProcessing.getWarp(frame, rearrangedRoiPts, width, height)
+        cv2.imshow("warp", warpedImg)
 
-
-
-
-
-
-
-
-        #img_ocr = ocr.readtext(frameup)
-        #cv2.imshow("ocr", img_ocr)
+        # Superresolution
+        #srImg = cv2.resize(warpedImg, dsize=None, fx=2, fy=2)
+        #srImg = sr.upsample(warpedImg)
+        #cv2.imshow("sr", srImg)
 
 
-        #frameupespcn = sr.upsample(frameup)
-        #cv2.imshow("frameupespcn", frameupespcn)
+        # OCR        
+        ocrpreproc = ImageProcessing.preprocessForOCR(warpedImg)
+        ocrImg = ocr.readtext(ocrpreproc)
+        cv2.imshow("ocr", ocrImg)
 
-        #img_preproc = preProcessing(frame)
-        #        cv2.imshow("PreProc", img_preproc)
-        #        biggestClosedContour = getContours(img_preproc)
-        #        reorderedPoints = reorder(biggestClosedContour)
-        #        cv2.drawContours(frame, reorderedPoints, -1, (255, 0, 0), 10)
 
-        #        warpedImg = getWarp(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), biggestClosedContour)
-        #        warpedImg = image_smoothening(warpedImg)
-        #        warpedImg = remove_noise_and_smooth(warpedImg)
 
-        #       #warpedImg = cv2.resize(warpedImg, dsize=None, fx=4, fy=4)
-        #       #warpedImg = sr.upsample(warpedImg)
+        # barcode
+        bcImg = bc.decode(warpedImg)
+        cv2.imshow("warp", bcImg)
 
-        # frame = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+        #imgArray = ([frame, warpedImg], [ocrImg, bcImg])
+        #cv2.imshow("Result", ImageProcessing.stackImages(0.5, imgArray))
+
+
+
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
