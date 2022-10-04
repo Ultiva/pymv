@@ -167,11 +167,13 @@ class ImageProcessing():
         kernel = np.ones((3, 3), np.uint8)
         return cv2.dilate(image, kernel, iterations=1)
 
+
     # erosion
     @staticmethod
     def erode(image):
         kernel = np.ones((3, 3), np.uint8)
         return cv2.erode(image, kernel, iterations=1)
+
 
     # opening - erosion followed by dilation
     @staticmethod
@@ -179,15 +181,20 @@ class ImageProcessing():
         kernel = np.ones((3, 3), np.uint8)
         return cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
 
+
     @staticmethod
     def closing(image):
         kernel = np.ones((3, 3), np.uint8)
         return cv2.morphologyEx(image, cv2.MORPH_CLOSE, kernel)
 
+
     # canny edge detection
     @staticmethod
     def canny(image):
         return cv2.Canny(image, 100, 200)
+
+
+
 
     # skew correction
     @staticmethod

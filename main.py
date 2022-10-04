@@ -166,7 +166,7 @@ def run(
     ocr = OCR(ocr, gpu)
     sr = SuperResolution(srmodel, magnification)
 
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
     for i in range(3):
         _, _ = cap.read() # warmup
 
@@ -194,8 +194,8 @@ def run(
         #cv2.imshow("sr", srImg)
 
 
-        # OCR        
-        ocrpreproc = ImageProcessing.preprocessForOCR(warpedImg)
+        # OCR
+        ocrpreproc = ImageProcessing.preprocessForOCR(frame)
         ocrImg = ocr.readtext(ocrpreproc)
         cv2.imshow("ocr", ocrImg)
 
