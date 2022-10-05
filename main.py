@@ -44,8 +44,8 @@ from superresolution import SuperResolution
 
 
 def run(
-        height=800, # currently predefined for warp
-        width=400, # currently predefined for warp -> later solved by region proposal concept
+        height, # currently predefined for warp
+        width, # currently predefined for warp -> later solved by region proposal concept
         ocr="easyocr",
         gpu=False,
         magnification=4,
@@ -72,7 +72,6 @@ def run(
     while True:
         _, frame = cap.read()
 
-
         # find corners of biggest closed rectangle, rearrange them and draw those points
         # -> here later on more suitable roi method
         roiPts = ImageProcessing.biggestClosedContour(frame)
@@ -82,19 +81,19 @@ def run(
 
         # warp image with predefined lengths -> see in arguments from run( height and width)
         warpedImg = ImageProcessing.getWarp(frame, rearrangedRoiPts, width, height)
-        #cv2.imshow("warp", warpedImg)
+        cv2.imshow("warp", warpedImg)
 
-
-        # Apply Superresolution on warped image
-        warpedImg = cv2.resize(warpedImg, dsize=None, fx=2, fy=2)
-        warpedImg = sr.upsample(warpedImg)
+        # Apply Superresolution on warped image -> more research on this
+        #warpedImg = cv2.resize(warpedImg, dsize=None, fx=2, fy=2)
+        #warpedImg = sr.upsample(warpedImg)
         #cv2.imshow("sr", srImg)
 
 
         # OCR -> currently directly on warped image -> later on establish suitable OCR image preprossesing -> DESCEW, binary,...
         #ocrpreproc = ImageProcessing.preprocessForOCR(frame)
-        ocrImg = ocr.readtext(warpedImg)
-        cv2.imshow("OCR", ocrImg)
+        frame = ocr.readtext(frame)
+        #ocrImg = ocr.readtext(warpedImg)
+        #cv2.imshow("OCR", ocrImg)
 
 
         # barcode
@@ -119,8 +118,8 @@ def run(
 def parse_opt():
     parser = argparse.ArgumentParser()
     #parser.add_argument('--strong-sort-weights', type=Path, default=WEIGHTS / 'osnet_x0_25_msmt17.pt') # example
-    parser.add_argument("-H", "--height", type=int, default=640, help="crop height")
-    parser.add_argument("-W", "--width", type=int, default=480, help="crop width")
+    parser.add_argument("-H", "--height", type=int, default=960, help="crop height")
+    parser.add_argument("-W", "--width", type=int, default=520, help="crop width")
     parser.add_argument("-OCR", "--ocr", type=str, default="easyocr", help="pytesseract, easyocr or keras_ocr")
     parser.add_argument("-GPU", "--gpu", type=bool, default=0, help="Use GPU")
     parser.add_argument("-MAG", "--magnification", type=int, default=2, help="Magnification Factor (2 or 4)")

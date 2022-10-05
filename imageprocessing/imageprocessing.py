@@ -48,7 +48,8 @@ class ImageProcessing():
     @staticmethod
     def preprocessForRoI(image: np.ndarray) -> np.ndarray:
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        image = cv2.GaussianBlur(image, ksize=(3, 3), sigmaX=3, sigmaY=0)
+        #image = cv2.GaussianBlur(image, ksize=(3, 3), sigmaX=3, sigmaY=0)
+        image = cv2.GaussianBlur(image, (3, 3), 1)
         image = cv2.Canny(image, 20, 70)
         kernel = np.ones((3, 3))
         image = cv2.dilate(image, kernel, iterations=1)
