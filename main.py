@@ -34,6 +34,7 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
 
 
+
 from barcode import Barcode
 from imageprocessing import ImageProcessing
 from ocr import OCR
